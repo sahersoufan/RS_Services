@@ -1,33 +1,55 @@
 from Class.rsCore import rsCore
 from flask import Flask, jsonify, request
 
+restPort = 8050
 app = Flask(__name__)
 
 
-@app.route('/')
-def hello():
-    return 'this is my first api'
 
-@app.route('/post', methods=["POST"])
-def post():
-    input_json = request.get_json(force=True)
-    dictToReturn = {'data':input_json['data']}
-    return jsonify(dictToReturn['data'])
+@app.route('/setSqlInfo', methods=["POST"])
+def setSqlInfo():
+    try:
+        sqlInfo = request.get_json(force=True)
+        rsCore.setSqlInfo(sqlInfo)
+        return jsonify(success=True)
+    except:
+        return jsonify(success=False)
 
-@app.route('/initializeRecoSys', methods=['GET'])
+
+
+@app.route('/initializeRecoSys', methods=['POST'])
 def initiate():
-    rsCore.initiate()
-    return 'bla bla'
-@app.route('/updateRecoSys', methods=['GET'])
-async def update():
-    await rsCore.update()
-    return 'bla bla'
+    try:
+        rsCore.initiate()
+        return jsonify(success=True)
+    except:
+        return jsonify(success=False)
+
+
+
+# @app.route('/updateRecoSys', methods=['POST'])
+# async def update():
+#     try:
+#         await rsCore.update()
+#         return jsonify(success=True)
+#     except:
+#         return jsonify(success=False)
+
 
 @app.route('/getReco', methods=['POST'])
 def getRecommend():
-    userServices = request.get_json(force=True)
-    r = rsCore.getRecommend(userServices)
-    return jsonify(r)
+    try:
+        userServices = request.get_json(force=True)
+        r = rsCore.getRecommend(userServices)
+        return jsonify(r)
+    except:
+        return jsonify(success=False)
 
 
-app.run()
+@app.route('/test', methods=['GET'])
+def testF():
+    # data = request.get_json(force=True)
+    return 'it\'s a good way to communcation'
+
+if __name__ == "__main__":
+    app.run(host='0.0.0.0', port = restPort)

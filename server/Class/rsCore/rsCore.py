@@ -14,6 +14,11 @@ cosSim:np.ndarray = None
 indicies:pd.DataFrame = None
 
 
+def setSqlInfo(info:dict):
+    dbHandler.setSqlInfo(info)
+
+
+
 
 def initiate():
     """get a hole data and build the recoSys from point zero with new db"""
@@ -81,7 +86,7 @@ def getRecommend(userData : dict):
         ids = indicies.iloc[indicies.index == id].values[0][0]
         simScores = enumerate(cosSim[ids])
         simScores = sorted(simScores, key=lambda x: x[1], reverse=True)
-        simScores = simScores[1:10]
+        simScores = simScores[0:10]
 
         simIndex = [i[0] for i in simScores]
         services.get('id').append(simIndex)
