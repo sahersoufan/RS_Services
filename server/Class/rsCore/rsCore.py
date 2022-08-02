@@ -4,6 +4,7 @@ import numpy as np
 import pandas as pd
 import pickle
 import os
+
 from . import cleaningHelper
 from ..sqlConnection import dbHandler
 from ..tfIdf import tfIdfHandler
@@ -25,7 +26,7 @@ def initiate():
     try:
         print('get data from db')
         
-        data = pd.read_sql('jobs', con=dbHandler.engine, columns=[names.getJobId(), names.getJobDescription()])
+        data = pd.read_sql(names.getServiceModel(), con=dbHandler.engine, columns=[names.getJobId(), names.getJobDescription()])
         data_frame = pd.DataFrame(data)
         print('data is here, now we will clean it :)')
         
@@ -83,13 +84,16 @@ def getRecommend(userData : dict):
     """get a recommendation"""
     services = {'id' : []}
     for id in userData.get('id'):
-        ids = indicies.iloc[indicies.index == id].values[0][0]
-        simScores = enumerate(cosSim[ids])
-        simScores = sorted(simScores, key=lambda x: x[1], reverse=True)
-        simScores = simScores[0:10]
+        try:
+            ids = indicies.iloc[indicies.index == id].values[0][0]
+            simScores = enumerate(cosSim[ids])
+            simScores = sorted(simScores, key=lambda x: x[1], reverse=True)
+            simScores = simScores[0:10]
 
-        simIndex = [i[0] for i in simScores]
-        services.get('id').append(simIndex)
+            simIndex = [i[0] for i in simScores]
+            services.get('id').append(simIndex)
+        except Exception:
+            print(Exception)
     return services
 
 

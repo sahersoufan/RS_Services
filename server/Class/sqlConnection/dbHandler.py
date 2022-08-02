@@ -1,6 +1,6 @@
 from sqlalchemy import create_engine
 
-URL = 'mysql://{}:{}@{}:{}/{}?charset=utf8mb4'.format('root','saherMysqlSoufan','localhost',3306,'recosys')
+URL = 'mysql+pymysql://{}:{}@{}:{}/{}?charset=utf8mb4'.format('root','root','localhost',3306,'exchange')
 engine = create_engine(URL, encoding='utf-8')
 
 
@@ -15,7 +15,7 @@ def setSqlInfo(info:dict):
     lis = list(info['info'])
     global URL, engine
     print(info)
-    URL = 'mysql://{}:{}@{}:{}/{}?charset=utf8mb4'.format(lis[0],lis[1],lis[2],lis[3],lis[4])
+    URL = 'mysql+pymysql://{}:{}@{}:{}/{}?charset=utf8mb4'.format(lis[0],lis[1],lis[2],lis[3],lis[4])
     engine = create_engine(URL, encoding='utf-8')
 
 
